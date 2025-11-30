@@ -8,6 +8,7 @@ const assignmentSchema = new mongoose.Schema(
     file: { type: String},
     department: { type: String, required: true },
     semester: { type: Number, required: true },
+    onDate: { type: Date, default: Date.now},
     dueDate: { type: Date, required: true },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", required: true }
   },
