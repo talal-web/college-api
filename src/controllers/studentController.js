@@ -1,11 +1,21 @@
+import asyncHandler from "express-async-handler";
 import Student from "../models/Student.js";
 import bcrypt from "bcryptjs";
 
-export const registerStudent = async (req, res) => {
+// Register a new student
+export const registerStudent = asyncHandler(async (req, res) => {
   const { userID, name, rollNo, department, semester, password } = req.body;
 
-  const exists = await Student.findOne({userID});
-  if (exists) return res.status(400).json({ message: "Student Already exists" });
+  if (!userID || !password) {
+    res.status(400);
+    throw new Error("userID and password are required");
+  }
+
+  const exists = await Student.findOne({ userID });
+  if (exists) {
+    res.status(400);
+    throw new Error("Student already exists");
+  }
 
   const hash = await bcrypt.hash(password, 10);
 
@@ -18,10 +28,14 @@ export const registerStudent = async (req, res) => {
     password: hash
   });
 
-  res.json(student);
-};
+  res.status(201).json({
+    message: "Student registered successfully",
+    student
+  });
+});
 
-export const getStudents = async (req, res) => {
-  const students = await Student.find();
-  res.json(students);
-};
+// Get all students
+export const getStudents = asyncHandler(async (req, res) => {
+  const students = await Student.find().sort({ userID: 1 });
+  res.status(200).json(students);
+});

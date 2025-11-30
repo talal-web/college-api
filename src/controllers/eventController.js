@@ -1,17 +1,18 @@
 import Event from "../models/Event.js";
+import asyncHandler from "express-async-handler";
 
-export const createEvent = async (req, res) => {
+export const createEvent = asyncHandler(async (req, res) => {
   const event = await Event.create({
     title: req.body.title,
     description: req.body.description,
     image: req.file?.filename,
-    date: req.body.date
+    date: req.body.date,
   });
 
-  res.json(event);
-};
+  res.status(201).json(event);
+});
 
-export const getEvents = async (req, res) => {
+export const getEvents = asyncHandler(async (req, res) => {
   const events = await Event.find();
   res.json(events);
-};
+});
