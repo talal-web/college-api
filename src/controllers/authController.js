@@ -20,10 +20,10 @@ export const login = async (req, res) => {
 
     // For students: check if all info is filled
     if (!user.role || user.role === "student") {
-      if (!user.name || !user.rollNo || !user.department || !user.semester) {
+      if (!user.profileComplete) {
         return res.status(200).json({
           message: "Please complete your profile",
-          profileComplete: false
+          profileComplete: user.profileComplete
         });
       }
     }
