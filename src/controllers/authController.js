@@ -25,9 +25,9 @@ export const login = asyncHandler(async (req, res) => {
   // Student profile check
   if (!user.role || user.role === "student") {
     if (!user.profileComplete) {
-      return res.status(200).json({
+      return res.status(400).json({
         message: "Please complete your profile",
-        profileComplete: false
+        profileComplete: user.profileComplete
       });
     }
   }
@@ -39,3 +39,12 @@ export const login = asyncHandler(async (req, res) => {
     user: userData
   });
 });
+
+// GET /api/auth/me
+export const getMe = asyncHandler(async (req, res) => {
+  res.status(200).json({
+    success: true,
+    user: req.user,   // already loaded by protect middleware
+  });
+});
+
