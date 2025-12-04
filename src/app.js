@@ -14,12 +14,15 @@ import assignmentRoutes from "./routes/assignmentRoutes.js";
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true  // important for cookies/sessions
+}));
+
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
 
 // Optional: attach req.user before logging (only for authenticated routes)
-app.use(protect); 
 
 // Morgan request logging with user info
 app.use(morgan((tokens, req, res) => {
