@@ -25,15 +25,23 @@ export const getAssignments = asyncHandler(async (req, res) => {
   const user = req.user;
   let assignments;
 
+  // Get today & remove time (00:00:00)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   if (!user.role || user.role === "student") {
     assignments = await Assignment.find({
       department: user.department,
-      semester: user.semester
+      semester: user.semester,
+      dueDate: { $gte: today } // 👈 SHOW ONLY TODAY OR FUTURE
     }).sort({ dueDate: 1 });
 
   } else if (user.role === "admin") {
     const { department, semester } = req.query;
-    const filter = {};
+
+    const filter = {
+      dueDate: { $gte: today } // 👈 ADMIN ALSO SEES ONLY ACTIVE ASSIGNMENTS
+    };
 
     if (department) filter.department = department;
     if (semester) filter.semester = Number(semester);
