@@ -47,6 +47,31 @@ export const registerStudent = asyncHandler(async (req, res) => {
 
 // Get all students
 export const getStudents = asyncHandler(async (req, res) => {
-  const students = await Student.find().sort({ userID: 1 });
-  res.status(200).json(students);
+  const { search, department, semester } = req.query;
+
+  let query = {};
+
+  if (search) {
+    query.$or = [
+      { name: { $regex: search, $options: "i" } },
+      { userID: { $regex: search, $options: "i" } },
+      { rollNo: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  if (department) query.department = department;
+  if (semester) query.semester = semester;
+
+  const students = await Student.find(query).sort({ userID: 1 });
+
+  const safeStudents = students.map((s) => ({
+    userID: s.userID,
+    name: s.name,
+    rollNo: s.rollNo,
+    department: s.department,
+    semester: s.semester,
+    profileComplete: s.profileComplete
+  }));
+
+  res.status(200).json(safeStudents);
 });
