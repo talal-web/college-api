@@ -11,6 +11,7 @@ import studentRoutes from "./routes/studentRoutes.js";
 import eventRoutes from "./routes/eventRoutes.js";
 import diaryRoutes from "./routes/diaryRoutes.js";
 import assignmentRoutes from "./routes/assignmentRoutes.js";
+import productRoutes from "./routes/productRoutes.js"
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use("/api/students", studentRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/diary", diaryRoutes);
 app.use("/api/assignments", assignmentRoutes);
+app.use("/api/product", productRoutes);
 
 app.get("/", (req, res) => res.send("College Backend Running..."));
 
