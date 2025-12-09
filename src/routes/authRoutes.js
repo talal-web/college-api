@@ -7,6 +7,13 @@ const router = express.Router();
 
 router.post("/login", login);
 router.post("/profile/complete", completeProfile);
+router.get("/verify", protect, (req, res) => {
+  res.json({
+    success: true,
+    role: req.user.role,
+  });
+});
+
 router.get("/me", protect, getMe);
 
 
