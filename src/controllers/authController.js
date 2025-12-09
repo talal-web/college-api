@@ -25,8 +25,8 @@ export const login = asyncHandler(async (req, res) => {
   // Student profile check
   if (!user.role || user.role === "student") {
     if (!user.profileComplete) {
-      return res.status(400).json({
-        message: "Please complete your profile",
+      return res.status(200).json({
+        message: "Please complete you profile",
         profileComplete: user.profileComplete
       });
     }
