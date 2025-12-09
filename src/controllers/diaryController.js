@@ -1,8 +1,13 @@
 import Diary from "../models/Diary.js";
 import asyncHandler from "express-async-handler";
 
+// 
 export const addDiary = asyncHandler(async (req, res) => {
   const { subject, topic, outline, department, semester } = req.body;
+
+  if (!subject || !topic || !outline || !department || !semester) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
 
   const diary = await Diary.create({
     subject,
@@ -19,30 +24,45 @@ export const addDiary = asyncHandler(async (req, res) => {
 // Get Diary
 export const getDiary = asyncHandler(async (req, res) => {
   const user = req.user;
-  let diaries;
+  const { startDate, endDate, department: adminDept, semester: adminSem } = req.query;
 
-  if (!user.role || user.role === "student") {
+  let filter = {};
+
+  if (user.role === "student") {
+    // Restrict by student's department & semester
     if (!user.department || !user.semester) {
       return res.status(400).json({ message: "Student profile incomplete" });
     }
+    filter.department = user.department;
+    filter.semester = user.semester;
 
-    diaries = await Diary.find({
-      department: user.department,
-      semester: user.semester,
-    }).sort({ createdAt: -1 });
-  }
-  else if (user.role === "admin") {
-    const { department, semester } = req.query;
-    const filter = {};
+    if (startDate && endDate) {
+      filter.createdAt = {
+        $gte: new Date(startDate + "T00:00:00Z"),
+        $lte: new Date(endDate + "T23:59:59Z"),
+      };
+    } else {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+      filter.createdAt = { $gte: today, $lt: tomorrow };
+    }
 
-    if (department) filter.department = department;
-    if (semester) filter.semester = semester;
+  } else if (user.role === "admin") {
+    if (adminDept) filter.department = adminDept;
+    if (adminSem) filter.semester = adminSem;
 
-    diaries = await Diary.find(filter).sort({ createdAt: -1 });
-  }
-  else {
+    if (startDate && endDate) {
+      filter.createdAt = {
+        $gte: new Date(startDate + "T00:00:00Z"),
+        $lte: new Date(endDate + "T23:59:59Z"),
+      };
+    }
+  } else {
     return res.status(403).json({ message: "Unauthorized" });
   }
 
+  const diaries = await Diary.find(filter).sort({ createdAt: -1 });
   res.json(diaries);
 });
