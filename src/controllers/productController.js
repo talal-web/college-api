@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Product from "../models/Product.js";
+import { uploadToCloudinary } from "../utils/upload.js";
 
 
 // ========================================
@@ -13,7 +14,10 @@ export const addProduct = asyncHandler(async (req, res) => {
   }
 
   // Uploaded files
-   const images = req.files.map((file) => file.path);
+   const images = await Promise.all(
+      req.files.map((file) => uploadToCloudinary(file.buffer))
+    );
+
 
   const product = await Product.create({
     title,
