@@ -13,9 +13,7 @@ export const addProduct = asyncHandler(async (req, res) => {
   }
 
   // Uploaded files
-  const images = req.files
-  ? req.files.map(file => file.path.replace(/\\/g, "/")) // convert backslashes to slashes
-  : [];
+   const images = req.files.map((file) => file.path);
 
   const product = await Product.create({
     title,
