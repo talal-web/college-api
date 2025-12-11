@@ -1,6 +1,6 @@
 // /utils/upload.js
 import multer from "multer";
-import storage from "../config/cloudinary";
+import storage from "../config/cloudinaryStorage.js";
 
 // Filter to allow only image files
 const fileFilter = (req, file, cb) => {
