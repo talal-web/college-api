@@ -8,7 +8,7 @@ export const addProduct = asyncHandler(async (req, res) => {
   // Text fields
   const { title, description, price, category } = req.body;
 
-  if (!title || !description || !price || !category) {
+  if (!title || !description || description.length === 0 || !price || !category) {
     res.status(400);
     throw new Error("All fields are required");
   }

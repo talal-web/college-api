@@ -3,7 +3,11 @@ import mongoose from "mongoose";
 const ProductSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true, },
-    description: { type: String, required: true, minlength: 10, },
+    description: {type: [String], required: true, validate: {
+        validator: function (v) {
+          return v.length > 0;  // at least one description item
+        }, message: "Description array cannot be empty",
+      }, },
     price: { type: Number, required: true, },
     category: { type: String, required: true },
     condition: { type: String, enum: ["new", "used"], default: "used", },
