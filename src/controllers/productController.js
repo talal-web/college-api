@@ -101,6 +101,7 @@ export const deleteProduct = asyncHandler(async (req, res) => {
 
 // ========================================
 export const getMyProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({ seller: req.user.id });
+  const products = await Product.find({ seller: req.user.id })
+    .sort({ createdAt: -1 }); // newest first
   res.json(products);
 });
