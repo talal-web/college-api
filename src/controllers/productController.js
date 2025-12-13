@@ -38,7 +38,10 @@ export const addProduct = asyncHandler(async (req, res) => {
 
 // ========================================
 export const getAllProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find().populate("seller", "name department semester");
+  const products = await Product.find()
+    .sort({ createdAt: -1 }) // newest first
+    .populate("seller", "name department semester");
+
   res.json(products);
 });
 
