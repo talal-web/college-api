@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import logger from "./utils/logger.js";
 import { protect } from "./middlewares/authMiddleware.js"; // your JWT auth
 
@@ -15,6 +16,7 @@ import productRoutes from "./routes/productRoutes.js"
 
 const app = express();
 
+app.use(cookieParser());
 app.use(cors({
   origin: "http://localhost:3000",
   credentials: true  // important for cookies/sessions
@@ -45,12 +47,12 @@ app.use(morgan((tokens, req, res) => {
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/admin", adminRoutes);
-app.use("/api/students", studentRoutes);
+app.use("/api/admin", protect, adminRoutes);
+app.use("/api/students", protect, studentRoutes);
 app.use("/api/events", eventRoutes);
-app.use("/api/diary", diaryRoutes);
-app.use("/api/assignments", assignmentRoutes);
-app.use("/api/product", productRoutes);
+app.use("/api/diary", protect, diaryRoutes);
+app.use("/api/assignments", protect,  assignmentRoutes);
+app.use("/api/product", protect, productRoutes);
 
 app.get("/", (req, res) => res.send("College Backend Running..."));
 
