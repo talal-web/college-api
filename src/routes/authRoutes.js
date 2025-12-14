@@ -1,6 +1,7 @@
 import express from "express";
 import { getMe, login } from "../controllers/authController.js";
 import { completeProfile } from "../controllers/profileCompletionController.js";
+import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.get("/verify", (req, res) => {
   });
 });
 
-router.get("/me", getMe);
+router.get("/me", protect, getMe);
 
 
 export default router;
