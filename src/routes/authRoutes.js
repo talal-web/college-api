@@ -1,20 +1,19 @@
 import express from "express";
 import { getMe, login } from "../controllers/authController.js";
 import { completeProfile } from "../controllers/profileCompletionController.js";
-import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 router.post("/login", login);
 router.post("/profile/complete", completeProfile);
-router.get("/verify", protect, (req, res) => {
+router.get("/verify", (req, res) => {
   res.json({
     success: true,
     role: req.user.role,
   });
 });
 
-router.get("/me", protect, getMe);
+router.get("/me", getMe);
 
 
 export default router;

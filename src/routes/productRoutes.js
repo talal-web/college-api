@@ -8,15 +8,14 @@ import {
   getMyProducts,
 } from "../controllers/productController.js";
 import upload from "../utils/upload.js";
-import { protect } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/add", protect, upload.array("images", 3), addProduct);
+router.post("/add", upload.array("images", 3), addProduct);
 router.get("/", getAllProducts);
-router.get("/mine", protect, getMyProducts);
+router.get("/mine", getMyProducts);
 router.get("/:id", getSingleProduct);
-router.put("/:id", protect, updateProduct);
-router.delete("/:id", protect, deleteProduct);
+router.put("/:id", updateProduct);
+router.delete("/:id", deleteProduct);
 
 export default router;
