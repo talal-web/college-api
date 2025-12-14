@@ -39,7 +39,7 @@ export const login = asyncHandler(async (req, res) => {
     httpOnly: true,          // JS cannot access the token
     secure: false,           // false for localhost; true in production HTTPS
     maxAge: 60 * 60 * 1000,  // 1 hour
-    sameSite: "None",         // helps prevent CSRF
+    sameSite: "lax",         // helps prevent CSRF
   });
 
   res.json({
