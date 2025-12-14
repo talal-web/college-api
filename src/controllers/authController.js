@@ -33,11 +33,20 @@ export const login = asyncHandler(async (req, res) => {
   }
 
   const { password: _, ...userData } = user._doc;
+  const token = generateToken(user._id, user.role || "student");
+
+  res.cookie("token", token, {
+    httpOnly: true,          // JS cannot access the token
+    secure: false,           // false for localhost; true in production HTTPS
+    maxAge: 60 * 60 * 1000,  // 1 hour
+    sameSite: "lax",         // helps prevent CSRF
+  });
 
   res.json({
-    token: generateToken(user._id, user.role || "student"),
+    message: "Logged in successfully",
     user: userData
   });
+  
 });
 
 // GET /api/auth/me
