@@ -22,31 +22,31 @@ export const login = asyncHandler(async (req, res) => {
     throw new Error("Wrong password");
   }
 
+  const { password: _, ...userData } = user._doc;
   // Student profile check
   if (!user.role || user.role === "student") {
     if (!user.profileComplete) {
       return res.status(200).json({
+        user: userData,
         message: "Please complete you profile",
-        profileComplete: user.profileComplete
+        profileComplete: user.profileComplete,
       });
     }
   }
 
-  const { password: _, ...userData } = user._doc;
   const token = generateToken(user._id, user.role || "student");
 
   res.cookie("token", token, {
-    httpOnly: true,          // JS cannot access the token
-    secure: false,           // false for localhost; true in production HTTPS
-    maxAge: 60 * 60 * 1000,  // 1 hour
-    sameSite: "lax",         // helps prevent CSRF
+    httpOnly: true, // JS cannot access the token
+    secure: false, // false for localhost; true in production HTTPS
+    maxAge: 60 * 60 * 1000, // 1 hour
+    sameSite: "lax", // helps prevent CSRF
   });
 
   res.json({
     message: "Logged in successfully",
-    user: userData
+    user: userData,
   });
-  
 });
 
 // GET /api/auth/me
@@ -55,4 +55,3 @@ export const getMe = asyncHandler(async (req, res) => {
   if (!req.user) return res.status(401).json({ user: null });
   res.json({ user: req.user });
 });
-

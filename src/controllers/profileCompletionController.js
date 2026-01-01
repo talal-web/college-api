@@ -26,8 +26,16 @@ export const completeProfile = asyncHandler(async (req, res) => {
   await student.save();
 
   const { password: _, ...studentData } = student._doc;
+  const token = generateToken(student._id, student.role || "student");
+
+  res.cookie("token", token, {
+    httpOnly: true, // JS cannot access the token
+    secure: false, // false for localhost; true in production HTTPS
+    maxAge: 60 * 60 * 1000, // 1 hour
+    sameSite: "lax", // helps prevent CSRF
+  });
+
   res.status(200).json({
-    token: generateToken(student._id, student.role || "student"),
-    student: studentData
+    user: studentData,
   });
 });
