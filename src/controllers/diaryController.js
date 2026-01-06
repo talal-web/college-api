@@ -18,7 +18,7 @@ export const addDiary = asyncHandler(async (req, res) => {
     createdBy: req.user._id,
   });
 
-  res.status(201).json({ message: "Diary created successfully", diary });
+  res.status(201).json(diary);
 });
 
 // Get Diary
