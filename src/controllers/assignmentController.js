@@ -3,6 +3,8 @@ import asyncHandler from "express-async-handler";
 import { uploadToCloudinary } from "../utils/upload.js";
 
 export const uploadAssignment = asyncHandler(async (req, res) => {
+  console.log("REQ.FILE ===>", req.file);
+  console.log("REQ.BODY ===>", req.body);
   const { subject, title, description, department, semester, dueDate } =
     req.body;
 
