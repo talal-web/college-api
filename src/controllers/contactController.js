@@ -28,3 +28,34 @@ export const sendContactMessage = asyncHandler(async (req, res) => {
     data: contact,
   });
 });
+
+/**
+ * @desc    Admin gets all contact messages
+ * @route   GET /api/admin/contacts
+ * @access  Private (Admin)
+ */
+export const getContactMessages = asyncHandler(async (req, res) => {
+  // Pagination
+  const page = Number(req.query.page) || 1;
+  const limit = Number(req.query.limit) || 20;
+  const skip = (page - 1) * limit;
+
+  const total = await Contact.countDocuments();
+
+  const messages = await Contact.find()
+    .populate("studentId", "name  userID department semester") // include student name & roll
+    .sort({ createdAt: -1 }) // newest first
+    .skip(skip)
+    .limit(limit);
+
+  res.status(200).json({
+    success: true,
+    data: messages,
+    pagination: {
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+      limit,
+    },
+  });
+});
