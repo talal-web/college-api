@@ -13,6 +13,7 @@ import eventRoutes from "./routes/eventRoutes.js";
 import diaryRoutes from "./routes/diaryRoutes.js";
 import assignmentRoutes from "./routes/assignmentRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import contactRoutes from "./routes/contactRoutes.js";
 
 const app = express();
 
@@ -61,6 +62,7 @@ app.use("/api/events", eventRoutes);
 app.use("/api/diary", protect, diaryRoutes);
 app.use("/api/assignments", protect, assignmentRoutes);
 app.use("/api/product", protect, productRoutes);
+app.use("/api/contact", protect, contactRoutes);
 
 app.get("/", (req, res) => res.send("College Backend Running..."));
 
